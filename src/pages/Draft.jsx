@@ -22,9 +22,7 @@ const Draft = () => {
 
   const fetchData = async () => {
     try {
-      const response = await axios.get(
-        `${baseUrl}/api/posts/draft?page=1&limit=10`
-      );
+      const response = await axios.get(`${baseUrl}/api/posts/draft?page=1&limit=10`);
       setPosts(response.data);
     } catch (error) {
       console.log("error", error);
