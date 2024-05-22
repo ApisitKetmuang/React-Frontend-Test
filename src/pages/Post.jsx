@@ -38,8 +38,8 @@ const Post = () => {
       sx={{ padding: 4 }}
       style={{ backgroundColor: indigo[100] }}
     >
-      <Paper sx={{ padding: 2 }} style={{ backgroundColor: indigo[50] }}>
         <Nav />
+      <Paper sx={{ padding: 2 }} style={{ backgroundColor: indigo[50] }}>
 
         {posts.posts?.map((post, index) => (
           <Card key={index} sx={{ m: 2, maxWidth: 780 }}>
