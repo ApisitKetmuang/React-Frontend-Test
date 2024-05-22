@@ -93,7 +93,7 @@ const Create = () => {
                 <Button
                   variant="contained"
                   fullWidth
-                  style={{ color: grey[900], backgroundColor: red["A200"] }}
+                  style={{ backgroundColor: red["A200"] }}
                 >
                   Cancel
                 </Button>
@@ -104,7 +104,7 @@ const Create = () => {
               <Button
                 variant="contained"
                 fullWidth
-                style={{ color: grey[900], backgroundColor: green[400] }}
+                style={{ backgroundColor: green[400] }}
                 onClick={() => handlePublishNow()}
               >
                 Publish Now

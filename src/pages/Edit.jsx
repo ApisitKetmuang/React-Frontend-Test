@@ -89,7 +89,6 @@ const Edit = () => {
                 type="submit"
                 variant="contained"
                 fullWidth
-                style={{ color: grey[900], backgroundColor: amber[700] }}
               >
                 Save
               </Button>
@@ -99,7 +98,7 @@ const Edit = () => {
                 <Button
                   variant="contained"
                   fullWidth
-                  style={{ color: grey[900], backgroundColor: red["A200"] }}
+                  style={{ backgroundColor: red["A200"] }}
                 >
                   Cancel
                 </Button>
@@ -109,7 +108,7 @@ const Edit = () => {
               <Button
                 variant="contained"
                 fullWidth
-                style={{ color: grey[900], backgroundColor: red["A400"] }}
+                style={{ backgroundColor: red["A400"] }}
                 onClick={() => handleDelete(post.id)}
               >
                 Delete
