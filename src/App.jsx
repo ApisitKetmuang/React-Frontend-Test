@@ -1,5 +1,5 @@
-import { Routes, Route } from "react-router-dom";
 import React from "react";
+import { Routes, Route } from "react-router-dom";
 
 import Post from "./pages/Post";
 import Draft from "./pages/Draft";

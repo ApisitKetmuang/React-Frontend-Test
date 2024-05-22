@@ -67,6 +67,7 @@ const Edit = () => {
                 id="title"
                 variant="outlined"
                 fullWidth
+                label="Title"
                 style={{ backgroundColor: grey[50] }}
                 value={post.title}
                 onChange={(e) => setPost({ ...post, title: e.target.value })}
@@ -77,6 +78,7 @@ const Edit = () => {
                 id="content"
                 variant="outlined"
                 fullWidth
+                label="Content"
                 style={{ backgroundColor: grey[50] }}
                 value={post.content}
                 onChange={(e) => setPost({ ...post, content: e.target.value })}

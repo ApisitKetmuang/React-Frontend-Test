@@ -6,7 +6,7 @@ import Paper from "@mui/material/Paper";
 import Container from "@mui/material/Container";
 import TextField from "@mui/material/TextField";
 import { Button, Grid, Typography } from "@mui/material";
-import { red, amber, grey, indigo, green } from "@mui/material/colors";
+import { red, grey, indigo, green } from "@mui/material/colors";
 
 const Create = () => {
   const baseUrl = "http://dev.opensource-technology.com:3000";

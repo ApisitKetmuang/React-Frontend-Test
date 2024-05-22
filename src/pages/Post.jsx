@@ -11,7 +11,6 @@ import Typography from "@mui/material/Typography";
 import CardActions from "@mui/material/CardActions";
 import Paper from "@mui/material/Paper";
 import Divider from "@mui/material/Divider";
-
 import { indigo, blue } from "@mui/material/colors";
 
 import Nav from "../components/Nav";
