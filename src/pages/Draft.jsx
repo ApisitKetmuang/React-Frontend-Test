@@ -10,20 +10,21 @@ import CardContent from "@mui/material/CardContent";
 import Typography from "@mui/material/Typography";
 import CardActions from "@mui/material/CardActions";
 import Paper from "@mui/material/Paper";
-import { red, green, grey, indigo } from "@mui/material/colors";
-import Divider from '@mui/material/Divider';
-
+import { red, green, indigo } from "@mui/material/colors";
+import Divider from "@mui/material/Divider";
 
 import Nav from "../components/Nav";
 
 const Draft = () => {
   const baseUrl = "http://dev.opensource-technology.com:3000";
   const [posts, setPosts] = useState([]);
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   const fetchData = async () => {
     try {
-      const response = await axios.get(`${baseUrl}/api/posts/draft`);
+      const response = await axios.get(
+        `${baseUrl}/api/posts/draft?page=1&limit=10`
+      );
       setPosts(response.data);
     } catch (error) {
       console.log("error", error);
@@ -34,29 +35,29 @@ const Draft = () => {
     fetchData();
   }, []);
 
-  const handlePublished = (id) => {
+  const handlePublished = async (id) => {
     try {
-      axios.patch(`${baseUrl}/api/posts/${id}`, {published: true});
-      navigate('/')
+      await axios.patch(`${baseUrl}/api/posts/${id}`, { published: true });
+      navigate("/");
     } catch (error) {
-      console.log("error", error);
+      console.log(error.response.data);
     }
-  }
+  };
 
-  const handleDelete = (id) => {
+  const handleDelete = async (id) => {
     try {
-      axios.delete(`${baseUrl}/api/posts/${id}`);
+      await axios.delete(`${baseUrl}/api/posts/${id}`);
       fetchData();
     } catch (error) {
-      console.log("error", error);
+      console.log(error.response.data);
     }
-  }
+  };
 
   return (
-    <Container 
-    maxWidth="md" 
-    sx={{ padding: 4 }}
-    style={{ backgroundColor: indigo[100] }}
+    <Container
+      maxWidth="md"
+      sx={{ padding: 4 }}
+      style={{ backgroundColor: indigo[100] }}
     >
       <Paper sx={{ padding: 2 }} style={{ backgroundColor: indigo[50] }}>
         <Nav />
@@ -70,7 +71,7 @@ const Draft = () => {
               </Typography>
             </CardContent>
 
-            <Divider variant="middle" sx={{ mb: 1}}/>
+            <Divider variant="middle" sx={{ mb: 1 }} />
 
             <CardActions>
               <Typography
@@ -91,7 +92,7 @@ const Draft = () => {
               <Button
                 sx={{ px: 3 }}
                 variant="contained"
-                style={{  backgroundColor: green[400] }}
+                style={{ backgroundColor: green[400] }}
                 onClick={() => handlePublished(post.id)}
               >
                 Published
@@ -100,7 +101,7 @@ const Draft = () => {
               <Button
                 sx={{ px: 3 }}
                 variant="contained"
-                style={{  backgroundColor: red["A200"] }}
+                style={{ backgroundColor: red["A200"] }}
                 onClick={() => handleDelete(post.id)}
               >
                 Delete

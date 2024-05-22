@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import axios from "axios";
 import { useNavigate, Link } from "react-router-dom";
 
@@ -6,7 +6,7 @@ import Paper from "@mui/material/Paper";
 import Container from "@mui/material/Container";
 import TextField from "@mui/material/TextField";
 import { Button, Grid, Typography } from "@mui/material";
-import { red, amber, grey } from "@mui/material/colors";
+import { red, amber, grey, indigo, green } from "@mui/material/colors";
 
 const Create = () => {
   const baseUrl = "http://dev.opensource-technology.com:3000";
@@ -16,7 +16,7 @@ const Create = () => {
     content: "",
   });
 
-  const handleSubmit = (event) => {
+  const handleSave = async (event) => {
     event.preventDefault();
 
     if (!post.title) {
@@ -25,22 +25,40 @@ const Create = () => {
       alert("content is required");
     } else {
       try {
-        axios.post(`${baseUrl}/api/posts`, post);
+        await axios.post(`${baseUrl}/api/posts`, post);
         navigate("/draft");
       } catch (error) {
-        console.log("error", error);
+        console.log(error.response.data);
+      }
+    }
+  };
+
+  const handlePublishNow = async () => {
+    if (!post.title) {
+      alert("title is required");
+    } else if (!post.content) {
+      alert("content is required");
+    } else {
+      try {
+        const posts = await axios.post(`${baseUrl}/api/posts`, post);
+        await axios.patch(`${baseUrl}/api/posts/${posts.data.id}`, {
+          published: true,
+        });
+        navigate("/");
+      } catch (error) {
+        console.log(error.response.data);
       }
     }
   };
 
   return (
     <Container maxWidth="sm" sx={{ padding: 5 }}>
-      <Paper sx={{ my: 10, p: 4 }} style={{ backgroundColor: amber[100] }}>
+      <Paper sx={{ my: 10, p: 4 }} style={{ backgroundColor: indigo[50] }}>
         <Typography align="center" variant="h3" gutterBottom>
           New Post
         </Typography>
 
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleSave}>
           <Grid container spacing={2}>
             <Grid item xs={12}>
               <TextField
@@ -48,7 +66,7 @@ const Create = () => {
                 label="Title"
                 variant="outlined"
                 fullWidth
-                style={{ backgroundColor: amber[50] }}
+                style={{ backgroundColor: grey[50] }}
                 onChange={(e) => setPost({ ...post, title: e.target.value })}
               />
             </Grid>
@@ -59,18 +77,13 @@ const Create = () => {
                 label="Content"
                 variant="outlined"
                 fullWidth
-                style={{ backgroundColor: amber[50] }}
+                style={{ backgroundColor: grey[50] }}
                 onChange={(e) => setPost({ ...post, content: e.target.value })}
               />
             </Grid>
 
             <Grid item xs={12} sm={6}>
-              <Button
-                type="submit"
-                variant="contained"
-                fullWidth
-                style={{ color: grey[900], backgroundColor: amber[700] }}
-              >
+              <Button type="submit" variant="contained" fullWidth>
                 Save
               </Button>
             </Grid>
@@ -85,6 +98,17 @@ const Create = () => {
                   Cancel
                 </Button>
               </Link>
+            </Grid>
+
+            <Grid item xs={12}>
+              <Button
+                variant="contained"
+                fullWidth
+                style={{ color: grey[900], backgroundColor: green[400] }}
+                onClick={() => handlePublishNow()}
+              >
+                Publish Now
+              </Button>
             </Grid>
           </Grid>
         </form>

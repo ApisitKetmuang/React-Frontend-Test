@@ -7,7 +7,7 @@ import { Button, Grid, Typography } from "@mui/material";
 import Container from "@mui/material/Container";
 import Paper from "@mui/material/Paper";
 import TextField from "@mui/material/TextField";
-import { red, amber, grey } from "@mui/material/colors";
+import { red, amber, grey, indigo } from "@mui/material/colors";
 
 const Edit = () => {
   const baseUrl = "http://dev.opensource-technology.com:3000";
@@ -33,29 +33,29 @@ const Edit = () => {
 
   console.log(post);
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
 
     try {
-      axios.patch(`${baseUrl}/api/posts/${id}`, post);
-      navigate('/');
+      await axios.patch(`${baseUrl}/api/posts/${id}`, post);
+      navigate("/");
     } catch (error) {
-      console.log("error", error);
+      console.log(error.response.data);
     }
   };
 
-  const handleDelete = (id) => {
+  const handleDelete = async (id) => {
     try {
-      axios.delete(`${baseUrl}/api/posts/${id}`);
-      navigate('/')
+      await axios.delete(`${baseUrl}/api/posts/${id}`);
+      navigate("/");
     } catch (error) {
-      console.log("error", error);
+      console.log(error.response.data);
     }
-  }
+  };
 
   return (
     <Container maxWidth="sm" sx={{ padding: 5 }}>
-      <Paper sx={{ my: 10, p: 4 }} style={{ backgroundColor: amber[100] }}>
+      <Paper sx={{ my: 10, p: 4 }} style={{ backgroundColor: indigo[50] }}>
         <Typography align="center" variant="h3" gutterBottom>
           Edit Post
         </Typography>
@@ -67,7 +67,7 @@ const Edit = () => {
                 id="title"
                 variant="outlined"
                 fullWidth
-                style={{ backgroundColor: amber[50] }}
+                style={{ backgroundColor: grey[50] }}
                 value={post.title}
                 onChange={(e) => setPost({ ...post, title: e.target.value })}
               />
@@ -77,7 +77,7 @@ const Edit = () => {
                 id="content"
                 variant="outlined"
                 fullWidth
-                style={{ backgroundColor: amber[50] }}
+                style={{ backgroundColor: grey[50] }}
                 value={post.content}
                 onChange={(e) => setPost({ ...post, content: e.target.value })}
               />

@@ -10,7 +10,7 @@ import CardContent from "@mui/material/CardContent";
 import Typography from "@mui/material/Typography";
 import CardActions from "@mui/material/CardActions";
 import Paper from "@mui/material/Paper";
-import Divider from '@mui/material/Divider';
+import Divider from "@mui/material/Divider";
 
 import { indigo, blue } from "@mui/material/colors";
 
@@ -22,7 +22,7 @@ const Post = () => {
 
   const fetchData = async () => {
     try {
-      const response = await axios.get(`${baseUrl}/api/posts`);
+      const response = await axios.get(`${baseUrl}/api/posts?page=1&limit=10`);
       setPosts(response.data);
     } catch (error) {
       console.log("error", error);
@@ -34,10 +34,10 @@ const Post = () => {
   }, []);
 
   return (
-    <Container 
-    maxWidth="md" 
-    sx={{ padding: 4 }}
-    style={{ backgroundColor: indigo[100] }}
+    <Container
+      maxWidth="md"
+      sx={{ padding: 4 }}
+      style={{ backgroundColor: indigo[100] }}
     >
       <Paper sx={{ padding: 2 }} style={{ backgroundColor: indigo[50] }}>
         <Nav />
@@ -51,7 +51,7 @@ const Post = () => {
               </Typography>
             </CardContent>
 
-            <Divider variant="middle" sx={{ mb: 1}} />
+            <Divider variant="middle" sx={{ mb: 1 }} />
 
             <CardActions>
               <Typography
@@ -64,10 +64,11 @@ const Post = () => {
               </Typography>
 
               <Link to={`/edit/${post.id}`}>
-                <Button 
-                sx={{ flexShrink: 0 }} 
-                variant="contained" m={2}
-                style={{ backgroundColor: blue[400]}}
+                <Button
+                  sx={{ flexShrink: 0 }}
+                  variant="contained"
+                  m={2}
+                  style={{ backgroundColor: blue[400] }}
                 >
                   Edit
                 </Button>
