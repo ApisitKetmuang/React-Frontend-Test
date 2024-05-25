@@ -12,25 +12,35 @@ import CardActions from "@mui/material/CardActions";
 import Paper from "@mui/material/Paper";
 import Divider from "@mui/material/Divider";
 import { indigo, blue } from "@mui/material/colors";
+import Pagination from "@mui/material/Pagination";
 
 import Nav from "../components/Nav";
 
 const Post = () => {
   const baseUrl = "http://dev.opensource-technology.com:3000";
   const [posts, setPosts] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(0);
 
-  const fetchData = async () => {
+  const fetchData = async (currentPage) => {
     try {
-      const response = await axios.get(`${baseUrl}/api/posts?page=1&limit=10`);
+      const response = await axios.get(
+        `${baseUrl}/api/posts?page=${currentPage}&limit=10`
+      );
       setPosts(response.data);
+      setTotalPages(response.data.total_page);
     } catch (error) {
       console.log("error", error);
     }
   };
 
   useEffect(() => {
-    fetchData();
-  }, []);
+    fetchData(currentPage);
+  }, [currentPage]);
+
+  const handleChange = (_, currentPage) => {
+    setCurrentPage(currentPage);
+  };
 
   return (
     <Container
@@ -38,9 +48,8 @@ const Post = () => {
       sx={{ padding: 4 }}
       style={{ backgroundColor: indigo[100] }}
     >
-        <Nav />
+      <Nav />
       <Paper sx={{ padding: 2 }} style={{ backgroundColor: indigo[50] }}>
-
         {posts.posts?.map((post, index) => (
           <Card key={index} sx={{ m: 2, maxWidth: 780 }}>
             <CardContent>
@@ -75,6 +84,12 @@ const Post = () => {
             </CardActions>
           </Card>
         ))}
+
+        <Pagination
+          count={totalPages}
+          color="primary"
+          onChange={handleChange}
+        />
       </Paper>
     </Container>
   );
