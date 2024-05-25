@@ -25,9 +25,7 @@ const Draft = () => {
 
   const fetchData = async (currentPage) => {
     try {
-      const response = await axios.get(
-        `${baseUrl}/api/posts/draft?page=${currentPage}&limit=10`
-      );
+      const response = await axios.get(`${baseUrl}/api/posts/draft?page=${currentPage}&limit=10`);
       setPosts(response.data);
       setTotalPages(response.data.total_page);
     } catch (error) {
