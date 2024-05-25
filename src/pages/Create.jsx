@@ -11,6 +11,7 @@ import { red, grey, indigo, green } from "@mui/material/colors";
 const Create = () => {
   const baseUrl = "http://dev.opensource-technology.com:3000";
   const navigate = useNavigate();
+  const [error, setError] = useState(null);
   const [post, setPost] = useState({
     title: "",
     content: "",
@@ -20,35 +21,46 @@ const Create = () => {
     event.preventDefault();
 
     if (!post.title) {
-      alert("title is required");
-    } else if (!post.content) {
-      alert("content is required");
-    } else {
-      try {
-        await axios.post(`${baseUrl}/api/posts`, post);
-        navigate("/draft");
-      } catch (error) {
-        console.log(error.response.data);
-      }
+      setError("Title is required.");
+      return;
     }
+    if (!post.content) {
+      setError("Content is required.");
+      return;
+    }
+
+    try {
+      await axios.post(`${baseUrl}/api/posts`, post);
+      navigate("/draft");
+    } catch (error) {
+      console.log(error.response.data);
+    }
+
+    setError("");
   };
 
   const handlePublishNow = async () => {
     if (!post.title) {
-      alert("title is required");
-    } else if (!post.content) {
-      alert("content is required");
-    } else {
-      try {
-        const posts = await axios.post(`${baseUrl}/api/posts`, post);
-        await axios.patch(`${baseUrl}/api/posts/${posts.data.id}`, {
-          published: true,
-        });
-        navigate("/");
-      } catch (error) {
-        console.log(error.response.data);
-      }
+      setError("Title is required.");
+      return;
     }
+
+    if (!post.content) {
+      setError("Content is required.");
+      return;
+    }
+
+    try {
+      const posts = await axios.post(`${baseUrl}/api/posts`, post);
+      await axios.patch(`${baseUrl}/api/posts/${posts.data.id}`, {
+        published: true,
+      });
+      navigate("/");
+    } catch (error) {
+      console.log(error.response.data);
+    }
+
+    setError("");
   };
 
   return (
@@ -80,6 +92,18 @@ const Create = () => {
                 style={{ backgroundColor: grey[50] }}
                 onChange={(e) => setPost({ ...post, content: e.target.value })}
               />
+            </Grid>
+
+            <Grid item xs={12}>
+              {error && (
+                <Typography
+                  variant="subtitle1"
+                  sx={{ fontWeight: "600" }}
+                  style={{ color: red[800] }}
+                >
+                  {error}
+                </Typography>
+              )}
             </Grid>
 
             <Grid item xs={12} sm={6}>
