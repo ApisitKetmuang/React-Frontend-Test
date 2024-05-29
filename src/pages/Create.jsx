@@ -8,10 +8,12 @@ import TextField from "@mui/material/TextField";
 import { Button, Grid, Typography } from "@mui/material";
 import { red, grey, indigo, green } from "@mui/material/colors";
 
+import toast from 'react-hot-toast';
+
 const Create = () => {
   const baseUrl = "http://dev.opensource-technology.com:3000";
   const navigate = useNavigate();
-  const [error, setError] = useState(null);
+  const [errorMsg, setErrorMsg] = useState("");
   const [post, setPost] = useState({
     title: "",
     content: "",
@@ -21,46 +23,49 @@ const Create = () => {
     event.preventDefault();
 
     if (!post.title) {
-      setError("Title is required.");
+      setErrorMsg("Title is required.");
       return;
     }
     if (!post.content) {
-      setError("Content is required.");
+      setErrorMsg("Content is required.");
       return;
     }
 
+    setErrorMsg("");
+
     try {
       await axios.post(`${baseUrl}/api/posts`, post);
+      toast.success("Post created", {duration: 3000})
       navigate("/draft");
     } catch (error) {
       console.log(error.response.data);
     }
-
-    setError("");
+    
   };
 
   const handlePublishNow = async () => {
     if (!post.title) {
-      setError("Title is required.");
+      setErrorMsg("Title is required.");
       return;
     }
 
     if (!post.content) {
-      setError("Content is required.");
+      setErrorMsg("Content is required.");
       return;
     }
 
+    setErrorMsg("");
+
     try {
-      const posts = await axios.post(`${baseUrl}/api/posts`, post);
-      await axios.patch(`${baseUrl}/api/posts/${posts.data.id}`, {
-        published: true,
-      });
+      const createPost = await axios.post(`${baseUrl}/api/posts`, post);
+      const publishedPost = await axios.patch(`${baseUrl}/api/posts/${createPost.data.id}`, { published: true });
+      await Promise.all([createPost, publishedPost])
+      toast.success("Post published", {duration: 3000})
       navigate("/");
     } catch (error) {
       console.log(error.response.data);
     }
 
-    setError("");
   };
 
   return (
@@ -95,13 +100,13 @@ const Create = () => {
             </Grid>
 
             <Grid item xs={12}>
-              {error && (
+              {errorMsg && (
                 <Typography
                   variant="subtitle1"
                   sx={{ fontWeight: "600" }}
                   style={{ color: red[800] }}
                 >
-                  {error}
+                  {errorMsg}
                 </Typography>
               )}
             </Grid>
@@ -136,6 +141,7 @@ const Create = () => {
             </Grid>
           </Grid>
         </form>
+        
       </Paper>
     </Container>
   );

@@ -10,36 +10,39 @@ import CardContent from "@mui/material/CardContent";
 import Typography from "@mui/material/Typography";
 import CardActions from "@mui/material/CardActions";
 import Paper from "@mui/material/Paper";
-import { red, green, indigo } from "@mui/material/colors";
+import { red, green, indigo, blue } from "@mui/material/colors";
 import Divider from "@mui/material/Divider";
 import Pagination from "@mui/material/Pagination";
 
 import Nav from "../components/Nav";
 
+import toast from 'react-hot-toast';
+
 const Draft = () => {
   const baseUrl = "http://dev.opensource-technology.com:3000";
   const navigate = useNavigate();
   const [posts, setPosts] = useState([]);
-  const [currentPage, setCurrentPage] = useState(1);
+  const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(0);
 
-  const fetchData = async (currentPage) => {
+  const fetchData = async (page) => {
     try {
-      const response = await axios.get(`${baseUrl}/api/posts/draft?page=${currentPage}&limit=10`);
+      const response = await axios.get(`${baseUrl}/api/posts/draft?page=${page}&limit=10`);
       setPosts(response.data);
       setTotalPages(response.data.total_page);
     } catch (error) {
-      console.log("error", error);
+      console.log("error", error.response.data);
     }
   };
 
   useEffect(() => {
-    fetchData(currentPage);
-  }, [currentPage]);
+    fetchData(page);
+  }, [page]);
 
   const handlePublished = async (id) => {
     try {
       await axios.patch(`${baseUrl}/api/posts/${id}`, { published: true });
+      toast.success("Post published", {duration: 3000})
       navigate("/");
     } catch (error) {
       console.log(error.response.data);
@@ -50,13 +53,14 @@ const Draft = () => {
     try {
       await axios.delete(`${baseUrl}/api/posts/${id}`);
       fetchData();
+      toast.error("Post deleted", {duration: 3000})
     } catch (error) {
       console.log(error.response.data);
     }
   };
 
-  const handleChange = (_, currentPage) => {
-    setCurrentPage(currentPage);
+  const handleChange = (_event, currentPage) => {
+    setPage(currentPage);
   };
 
   return (
@@ -90,7 +94,7 @@ const Draft = () => {
               </Typography>
 
               <Link to={`/edit/${post.id}`}>
-                <Button sx={{ flexShrink: 0 }} variant="contained" m={2}>
+                <Button sx={{ flexShrink: 0 }} variant="contained" m={2} style={{ backgroundColor: blue[400] }}>
                   Edit
                 </Button>
               </Link>
@@ -116,11 +120,13 @@ const Draft = () => {
           </Card>
         ))}
 
-        <Pagination
-          count={totalPages}
-          color="primary"
-          onChange={handleChange}
-        />
+        <Container sx={{ width: 'fit-content' }}>
+          <Pagination 
+            count={totalPages}
+            color="primary"
+            onChange={handleChange}
+          />
+        </Container>
       </Paper>
     </Container>
   );

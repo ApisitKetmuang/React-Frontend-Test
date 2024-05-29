@@ -19,12 +19,12 @@ import Nav from "../components/Nav";
 const Post = () => {
   const baseUrl = "http://dev.opensource-technology.com:3000";
   const [posts, setPosts] = useState([]);
-  const [currentPage, setCurrentPage] = useState(1);
+  const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(0);
 
-  const fetchData = async (currentPage) => {
+  const fetchData = async (page) => {
     try {
-      const response = await axios.get(`${baseUrl}/api/posts?page=${currentPage}&limit=10`);
+      const response = await axios.get(`${baseUrl}/api/posts?page=${page}&limit=10`);
       setPosts(response.data);
       setTotalPages(response.data.total_page);
     } catch (error) {
@@ -33,11 +33,11 @@ const Post = () => {
   };
 
   useEffect(() => {
-    fetchData(currentPage);
-  }, [currentPage]);
+    fetchData(page);
+  }, [page]);
 
-  const handleChange = (_, currentPage) => {
-    setCurrentPage(currentPage);
+  const handleChange = (_event, currentPage) => {
+    setPage(currentPage);
   };
 
   return (
@@ -83,11 +83,13 @@ const Post = () => {
           </Card>
         ))}
 
-        <Pagination
-          count={totalPages}
-          color="primary"
-          onChange={handleChange}
-        />
+        <Container sx={{ width: 'fit-content' }}>
+          <Pagination
+            count={totalPages}
+            color="primary"
+            onChange={handleChange}
+          />
+        </Container>
       </Paper>
     </Container>
   );

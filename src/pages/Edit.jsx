@@ -7,7 +7,9 @@ import { Button, Grid, Typography } from "@mui/material";
 import Container from "@mui/material/Container";
 import Paper from "@mui/material/Paper";
 import TextField from "@mui/material/TextField";
-import { red, amber, grey, indigo } from "@mui/material/colors";
+import { red, grey, indigo } from "@mui/material/colors";
+
+import toast from 'react-hot-toast';
 
 const Edit = () => {
   const baseUrl = "http://dev.opensource-technology.com:3000";
@@ -23,7 +25,7 @@ const Edit = () => {
       const response = await axios.get(`${baseUrl}/api/posts/${id}`);
       setPost(response.data);
     } catch (error) {
-      console.log("error", error.response.data.error);
+      console.log("error", error.response.data);
     }
   };
 
@@ -31,13 +33,12 @@ const Edit = () => {
     fetchDataById(id);
   }, [id]);
 
-  console.log(post);
-
   const handleSubmit = async (event) => {
     event.preventDefault();
 
     try {
       await axios.patch(`${baseUrl}/api/posts/${id}`, post);
+      toast.success("Post updated", {duration: 3000})
       navigate("/");
     } catch (error) {
       console.log(error.response.data);
@@ -47,6 +48,7 @@ const Edit = () => {
   const handleDelete = async (id) => {
     try {
       await axios.delete(`${baseUrl}/api/posts/${id}`);
+      toast.error("Post deleted", {duration: 3000})
       navigate("/");
     } catch (error) {
       console.log(error.response.data);
