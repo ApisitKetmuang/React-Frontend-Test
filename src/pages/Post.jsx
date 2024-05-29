@@ -25,7 +25,7 @@ const Post = () => {
   const fetchData = async (page) => {
     try {
       const response = await axios.get(`${baseUrl}/api/posts?page=${page}&limit=10`);
-      setPosts(response.data);
+      setPosts(response.data.posts);
       setTotalPages(response.data.total_page);
     } catch (error) {
       console.log("error", error);
@@ -48,7 +48,7 @@ const Post = () => {
     >
       <Nav />
       <Paper sx={{ padding: 2 }} style={{ backgroundColor: indigo[50] }}>
-        {posts.posts?.map((post, index) => (
+        {posts.map((post, index) => (
           <Card key={index} sx={{ m: 2, maxWidth: 780 }}>
             <CardContent>
               <Typography variant="h5">{post.title}</Typography>

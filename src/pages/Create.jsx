@@ -58,8 +58,8 @@ const Create = () => {
 
     try {
       const createPost = await axios.post(`${baseUrl}/api/posts`, post);
-      const publishedPost = await axios.patch(`${baseUrl}/api/posts/${createPost.data.id}`, { published: true });
-      await Promise.all([createPost, publishedPost])
+      const postId = createPost.data.id
+      await axios.patch(`${baseUrl}/api/posts/${postId}`, { published: true });
       toast.success("Post published", {duration: 3000})
       navigate("/");
     } catch (error) {
