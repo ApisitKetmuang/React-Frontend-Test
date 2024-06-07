@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { useNavigate, useParams } from "react-router-dom";
-import { Link } from "react-router-dom";
+import { useNavigate, useParams, Link } from "react-router-dom";
 
 import { Button, Grid, Typography } from "@mui/material";
 import Container from "@mui/material/Container";
@@ -20,40 +19,40 @@ const Edit = () => {
     content: "",
   });
 
-  const fetchDataById = async (id) => {
+  async function fetchDataById(id) {
     try {
       const response = await axios.get(`${baseUrl}/api/posts/${id}`);
       setPost(response.data);
     } catch (error) {
       console.log("error", error.response.data);
     }
-  };
+  }
 
   useEffect(() => {
     fetchDataById(id);
   }, [id]);
 
-  const handleSubmit = async (event) => {
+  async function handleSubmit(event) {
     event.preventDefault();
 
     try {
       await axios.patch(`${baseUrl}/api/posts/${id}`, post);
-      toast.success("Post updated", {duration: 3000})
+      toast.success("Post updated", { duration: 3000 });
       navigate("/");
     } catch (error) {
       console.log(error.response.data);
     }
-  };
+  }
 
-  const handleDelete = async (id) => {
+  async function handleDelete(id) {
     try {
       await axios.delete(`${baseUrl}/api/posts/${id}`);
-      toast.error("Post deleted", {duration: 3000})
+      toast.error("Post deleted", { duration: 3000 });
       navigate("/");
     } catch (error) {
       console.log(error.response.data);
     }
-  };
+  }
 
   return (
     <Container maxWidth="sm" sx={{ padding: 5 }}>

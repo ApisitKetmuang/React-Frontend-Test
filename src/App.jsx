@@ -6,10 +6,11 @@ import Draft from "./pages/Draft";
 import Edit from "./pages/Edit";
 import Create from "./pages/Create";
 
-import toast, { Toaster } from 'react-hot-toast';
+import { Toaster } from 'react-hot-toast';
 
 const App = () => {
   return (
+
     <div>
       <Toaster position="top-right" />
       <Routes>
@@ -27,6 +28,7 @@ const App = () => {
         </Route>
       </Routes>
     </div>
+    
   );
 };
 

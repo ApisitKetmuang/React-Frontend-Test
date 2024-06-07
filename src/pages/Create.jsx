@@ -19,7 +19,7 @@ const Create = () => {
     content: "",
   });
 
-  const handleSave = async (event) => {
+  async function handleSave(event) {
     event.preventDefault();
 
     if (!post.title) {
@@ -35,15 +35,15 @@ const Create = () => {
 
     try {
       await axios.post(`${baseUrl}/api/posts`, post);
-      toast.success("Post created", {duration: 3000})
+      toast.success("Post created", { duration: 3000 });
       navigate("/draft");
     } catch (error) {
       console.log(error.response.data);
     }
-    
-  };
 
-  const handlePublishNow = async () => {
+  }
+
+  async function handlePublishNow() {
     if (!post.title) {
       setErrorMsg("Title is required.");
       return;
@@ -58,15 +58,15 @@ const Create = () => {
 
     try {
       const createPost = await axios.post(`${baseUrl}/api/posts`, post);
-      const postId = createPost.data.id
+      const postId = createPost.data.id;
       await axios.patch(`${baseUrl}/api/posts/${postId}`, { published: true });
-      toast.success("Post published", {duration: 3000})
+      toast.success("Post published", { duration: 3000 });
       navigate("/");
     } catch (error) {
       console.log(error.response.data);
     }
 
-  };
+  }
 
   return (
     <Container maxWidth="sm" sx={{ padding: 5 }}>
@@ -84,6 +84,7 @@ const Create = () => {
                 variant="outlined"
                 fullWidth
                 style={{ backgroundColor: grey[50] }}
+                autoFocus
                 onChange={(e) => setPost({ ...post, title: e.target.value })}
               />
             </Grid>

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useRef } from "react";
 import { useState, useEffect } from "react";
 import axios from "axios";
 import moment from "moment";
@@ -24,44 +24,56 @@ const Draft = () => {
   const [posts, setPosts] = useState([]);
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(0);
+  const [isLoading, setIsLoading] = useState(false)
 
-  const fetchData = async (page) => {
+  async function fetchData(page, signal) {
     try {
-      const response = await axios.get(`${baseUrl}/api/posts/draft?page=${page}&limit=10`);
-      setPosts(response.data.posts);
-      setTotalPages(response.data.total_page);
+      setIsLoading(true)
+      const res = await axios.get(`${baseUrl}/api/posts/draft?page=${page}&limit=10`,{signal});
+      setPosts(res.data.posts);
+      setTotalPages(res.data.total_page);
+      setIsLoading(false)
     } catch (error) {
-      console.log("error", error.response.data);
+      if (error.message === 'canceled') {
+        console.log("Abort draft page");
+      } else {
+        console.log("error", error.response.data);
+      }
     }
-  };
-
+  }
+  
   useEffect(() => {
-    fetchData(page);
+    const controller = new AbortController();
+    const signal = controller.signal
+    fetchData(page, signal);
+    return() => {
+      controller.abort()
+    }
   }, [page]);
 
-  const handlePublished = async (id) => {
+  async function handlePublished(id) {
     try {
       await axios.patch(`${baseUrl}/api/posts/${id}`, { published: true });
-      toast.success("Post published", {duration: 3000})
+      toast.success("Post published", { duration: 3000 });
       navigate("/");
     } catch (error) {
       console.log(error.response.data);
     }
-  };
+  }
 
-  const handleDelete = async (id) => {
+  async function handleDelete(id) {
     try {
       await axios.delete(`${baseUrl}/api/posts/${id}`);
       fetchData();
-      toast.error("Post deleted", {duration: 3000})
+      toast.error("Post deleted", { duration: 3000 });
     } catch (error) {
       console.log(error.response.data);
     }
-  };
+  }
 
-  const handleChange = (_event, currentPage) => {
+  function handlePagination(_event, currentPage) {
     setPage(currentPage);
-  };
+  }
 
   return (
     <Container
@@ -71,6 +83,9 @@ const Draft = () => {
     >
       <Nav />
       <Paper sx={{ padding: 2 }} style={{ backgroundColor: indigo[50] }}>
+        {isLoading && (
+          <Container sx={{ width: "fit-content" }}>Loading...</Container>
+        )}
         {posts.map((post, index) => (
           <Card key={index} sx={{ m: 2, maxWidth: 780 }}>
             <CardContent>
@@ -94,7 +109,12 @@ const Draft = () => {
               </Typography>
 
               <Link to={`/edit/${post.id}`}>
-                <Button sx={{ flexShrink: 0 }} variant="contained" m={2} style={{ backgroundColor: blue[400] }}>
+                <Button
+                  sx={{ flexShrink: 0 }}
+                  variant="contained"
+                  m={2}
+                  style={{ backgroundColor: blue[400] }}
+                >
                   Edit
                 </Button>
               </Link>
@@ -120,11 +140,11 @@ const Draft = () => {
           </Card>
         ))}
 
-        <Container sx={{ width: 'fit-content' }}>
-          <Pagination 
+        <Container sx={{ width: "fit-content" }}>
+          <Pagination
             count={totalPages}
             color="primary"
-            onChange={handleChange}
+            onChange={handlePagination}
           />
         </Container>
       </Paper>
