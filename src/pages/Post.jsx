@@ -12,9 +12,9 @@ import CardActions from "@mui/material/CardActions";
 import Paper from "@mui/material/Paper";
 import Divider from "@mui/material/Divider";
 import { indigo, blue } from "@mui/material/colors";
-import Pagination from "@mui/material/Pagination";
 
 import Nav from "../components/Nav";
+import Paginate from "../components/Paginate";
 
 const Post = () => {
   const baseUrl = "http://dev.opensource-technology.com:3000";
@@ -34,7 +34,7 @@ const Post = () => {
       if (error.message === 'canceled') {
         console.log("Abort post page");
       } else {
-        console.log("error", error.response.data);
+        console.log(error.message);
       }
   }
 }
@@ -42,13 +42,14 @@ const Post = () => {
   useEffect(() => {
     const controller = new AbortController();
     const signal = controller.signal
+    window.scroll({ top: 0, behavior: 'smooth' });
       fetchData(page, signal);
     return() => {
       controller.abort()
     }
   }, [page]);
 
-  function handlePagination(_event, currentPage) {
+  function handlePagination(currentPage) {
     setPage(currentPage);
   }
 
@@ -99,11 +100,7 @@ const Post = () => {
         ))}
 
         <Container sx={{ width: "fit-content" }}>
-            <Pagination
-              count={totalPages}
-              color="primary"
-              onChange={handlePagination}
-            />
+            <Paginate totalPages={totalPages} onChange={handlePagination}/>
         </Container>
       </Paper>
     </Container>

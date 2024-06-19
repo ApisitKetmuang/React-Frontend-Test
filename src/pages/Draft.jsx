@@ -12,9 +12,9 @@ import CardActions from "@mui/material/CardActions";
 import Paper from "@mui/material/Paper";
 import { red, green, indigo, blue } from "@mui/material/colors";
 import Divider from "@mui/material/Divider";
-import Pagination from "@mui/material/Pagination";
 
 import Nav from "../components/Nav";
+import Paginate from "../components/Paginate";
 
 import toast from 'react-hot-toast';
 
@@ -37,7 +37,7 @@ const Draft = () => {
       if (error.message === 'canceled') {
         console.log("Abort draft page");
       } else {
-        console.log("error", error.response.data);
+        console.log(error.message);
       }
     }
   }
@@ -45,6 +45,7 @@ const Draft = () => {
   useEffect(() => {
     const controller = new AbortController();
     const signal = controller.signal
+    window.scroll({ top: 0, behavior: 'smooth' });
     fetchData(page, signal);
     return() => {
       controller.abort()
@@ -71,7 +72,7 @@ const Draft = () => {
     }
   }
 
-  function handlePagination(_event, currentPage) {
+  function handlePagination(currentPage) {
     setPage(currentPage);
   }
 
@@ -141,11 +142,8 @@ const Draft = () => {
         ))}
 
         <Container sx={{ width: "fit-content" }}>
-          <Pagination
-            count={totalPages}
-            color="primary"
-            onChange={handlePagination}
-          />
+        <Paginate totalPages={totalPages} onChange={handlePagination}/>
+
         </Container>
       </Paper>
     </Container>
